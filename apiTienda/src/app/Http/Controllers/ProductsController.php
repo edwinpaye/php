@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Product;
+
 class ProductsController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        return "hola";
+        return response(["productos" => Product::all()], 200);
     }
 
     /**
@@ -34,7 +36,8 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        (new Product($request->all()))->save();
+        return response(null, 204);
     }
 
     /**
@@ -43,9 +46,11 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
-        return "asignado".id;
+        //get by id
+        // Product::find($id)
+        return response(["obtener id: " => $id], 200);
     }
 
     /**
@@ -66,9 +71,11 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        //
+        // $product = Product::find($id);
+        // $productId->save();
+        return response(["actualizar: " => $id, "body: " => $request->all()], 200);
     }
 
     /**
@@ -79,6 +86,7 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Product::destroy($id);
+        return response(null, 204);
     }
 }

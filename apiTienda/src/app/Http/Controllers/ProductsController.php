@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Product;
 
 class ProductsController extends Controller
@@ -36,7 +36,8 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        (new Product($request->all()))->save();
+        // (new Product($request->all()))->save();
+        Product::create($request->all());
         return response(null, 204);
     }
 
@@ -46,11 +47,10 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show($id)
     {
-        //get by id
-        // Product::find($id)
-        return response(["obtener id: " => $id], 200);
+        $product = Product::findOrFail($id);
+        return response(["product: " => $product], 200);
     }
 
     /**
@@ -71,11 +71,11 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, $id)
     {
-        // $product = Product::find($id);
-        // $productId->save();
-        return response(["actualizar: " => $id, "body: " => $request->all()], 200);
+        $product = Product::findOrFail($id);
+        $product->fill($request->all())->save();
+        return response(["product update successful: " => $product], 200);
     }
 
     /**
@@ -86,6 +86,7 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
+        Product::findOrFail($id)->delete();
         // Product::destroy($id);
         return response(null, 204);
     }
